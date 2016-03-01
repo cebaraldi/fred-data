@@ -1,0 +1,28 @@
+@*****************************************
+ * Index entry method for the application *
+ *                                       *
+ * @param title The title to display     *
+ * @param data  .........                *
+ *****************************************@
+@(buf: scala.collection.mutable.ArrayBuffer[(Int, Int, Int, Double)])
+
+@main(buf) {
+  
+   <div id="header">
+     <h2>Federal Reserve Economic Data</h2>
+     <h3>St. Louis Fed</h3>
+   </div>
+   
+   <div id="main">
+     <div id="chart_div"/>
+   </div>
+
+   <div id="footer">
+    <div id="gui"></div>
+      @play.Play.application.configuration.getString("appName"), version 
+      @play.Play.application.configuration.getString("version"); CopyLeft 
+      <img border="0" src="@routes.Assets.at("images/Copyleft.png")" 
+      alt="CopyLeft" width="14" title="cebaraldi@@gmail.com"> 
+      2014 ceb
+   </div>
+}

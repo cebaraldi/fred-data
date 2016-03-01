@@ -1,0 +1,54 @@
+@*****************************************
+ * Main entry method for the application *
+ *                                       *
+ * @param title The title to display     *
+ * @param data  .........                *
+ *****************************************@
+ @(buf: scala.collection.mutable.ArrayBuffer[(Int, Int, Int, Double)])(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta name="author" content="Dr. Claudio E. Baraldi">
+    <meta name="description" content="some data plots">
+    <meta name="keywords" content="Economic Data, FRED, Time Series">
+    <meta http-equiv="ContentType" content="text/html" charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/fred-data.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+   
+    <title>GNPCA</title>
+    
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'GNPCA'],
+          @for(i <- 0 until buf.length){
+            [new Date(@buf(i)._1, @buf(i)._2, @buf(i)._3),  @buf(i)._4],
+          }
+        ]);
+
+        var options = {
+          vAxis: {title: '(Billions of Chained 2009 Dollars)'},
+          title: 'Real Gross National Product\n(Annual, Not Seasonally Adjusted)', 
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>        
+    
+  </head>
+  
+  <body>
+    @content
+  </body>
+  
+</html>

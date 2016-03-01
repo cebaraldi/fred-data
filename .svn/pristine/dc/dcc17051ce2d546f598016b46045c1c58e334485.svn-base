@@ -1,0 +1,55 @@
+/*************************************************************************
+	                             Constants
+**************************************************************************/
+@lightRed:      #fdd;
+@lightGreen:    #dfd;
+@lightBlue:     #ddf;
+
+@bodyBgColor:   #EEE;
+@bodyColor:     black;
+
+@headerBgColor: #aa0000; 
+@headerColor:   white;
+
+/*************************************************************************
+                        OPERATIONS & COLOR FUNCTIONS
+**************************************************************************/
+
+/*************************************************************************
+	                              MIXINS
+**************************************************************************/
+
+/*************************************************************************
+	                              STYLES
+**************************************************************************/
+head title {
+  color: blue;
+}
+
+body {
+  background-color: @bodyBgColor;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  color: @lightGreen;
+}
+   
+#header {
+  background-color: @headerBgColor;
+  color: @headerColor;
+  text-align: center;
+  padding: 10px;
+}
+
+#main {
+}
+
+#chart_div {
+  height: 600px;
+}
+
+#footer {
+  text-align: right;
+}
+

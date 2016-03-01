@@ -1,0 +1,95 @@
+package controllers
+
+import play.api._
+import play.api.mvc._
+import play.api.libs.ws._
+import play.api.Play.current
+import play.api.libs.Files.TemporaryFile
+import play.api.libs.json._
+import play.api.libs.json.Reads._
+import play.api.libs.functional.syntax._
+import concurrent.ExecutionContext.Implicits.global
+import java.io._
+import java.io.File
+import scala.collection.mutable.ArrayBuffer
+
+object Application extends Controller {
+
+  def index = Action.async {
+    val appName = play.Play.application.configuration.getString("appName")
+    val version = play.Play.application.configuration.getString("version")
+    val url = play.Play.application.configuration.getString("urlFred")
+    val fred = WS.url(url).get
+    fred.map(response => {
+      val fred: play.api.libs.json.JsValue = response.json
+      val buf = ArrayBuffer[(Int, Int, Int, Double)]()
+      
+      import play.api.libs.json._
+      import play.api.libs.json.Reads._
+      import play.api.libs.functional.syntax._
+
+      case class Observation(
+        realtime_start: String,
+        realtime_end: String,
+        date: String,
+        value: String)
+
+      case class GNPCA(
+        realtime_start: String,
+        realtime_end: String,
+        observation_start: String,
+        observation_end: String,
+        units: String,
+        output_type: Int,
+        file_type: String,
+        order_by: String,
+        sort_order: String,
+        count: Int,
+        offset: Int,
+        limit: Int,
+        observations: Seq[Observation])
+
+      implicit val observationReads: Reads[Observation] = (
+        (JsPath \ "realtime_start").read[String] and
+        (JsPath \ "realtime_end").read[String] and
+        (JsPath \ "date").read[String] and
+        (JsPath \ "value").read[String])(Observation.apply _)
+
+      implicit val gnpcaReads: Reads[GNPCA] = (
+        (JsPath \ "realtime_start").read[String] and
+        (JsPath \ "realtime_end").read[String] and
+        (JsPath \ "observation_start").read[String] and
+        (JsPath \ "observation_end").read[String] and
+        (JsPath \ "units").read[String] and
+        (JsPath \ "output_type").read[Int] and
+        (JsPath \ "file_type").read[String] and
+        (JsPath \ "order_by").read[String] and
+        (JsPath \ "sort_order").read[String] and
+        (JsPath \ "count").read[Int](min(0)) and
+        (JsPath \ "offset").read[Int] and
+        (JsPath \ "limit").read[Int] and
+        (JsPath \ "observations").read[Seq[Observation]])(GNPCA.apply _)
+
+      val datePattern = """(\d{4})-(\d\d)-(\d\d)""".r
+      fred.validate[GNPCA] match {
+        case s: JsSuccess[GNPCA] => {
+          // do something with gnpca
+          val gnpca: GNPCA = s.get
+          // println(gnpca.file_type)
+
+          for (g <- gnpca.observations) {
+            val datePattern(year, month, day) = g.date
+            buf += Tuple4(year.toInt, month.toInt, day.toInt, g.value.toDouble)    
+           }
+        }
+        case e: JsError => {
+          // error handling flow
+        }
+      }
+      
+      //println(rates.getClass.getSimpleName)
+      Ok(views.html.index(buf))
+    })
+  }
+
+}

@@ -1,0 +1,64 @@
+/*************************************************************************
+	                             Constants
+**************************************************************************/
+@lightRed:      #fdd;
+@lightGreen:    #dfd;
+@lightBlue:     #ddf;
+
+@bodyBgColor:   #EEE;
+@bodyColor:     black;
+
+@headerBgColor: #aa0000; 
+@headerColor:   white;
+
+@footerBgColor: @lightRed; 
+@footerColor:   black;
+
+/*************************************************************************
+                        OPERATIONS & COLOR FUNCTIONS
+**************************************************************************/
+
+/*************************************************************************
+	                              MIXINS
+**************************************************************************/
+
+/*************************************************************************
+	                              STYLES
+**************************************************************************/
+body {
+  background-color: @bodyBgColor;
+  color: @bodyColor;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 10px;
+}
+
+h1, h2, h3 {
+  color: @lightGreen;
+}
+
+#content {
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#header {
+  background-color: @headerBgColor;
+  color: @headerColor;
+  text-align: center;
+  padding: 10px;
+}
+
+#main {
+  #chart_div {
+    height: 500px;
+    margin: 0px;
+  }
+}
+
+#footer {
+  background-color: @footerBgColor;
+  color: @footerColor;
+  text-align: right;
+}
+
